@@ -134,36 +134,3 @@ test.describe('Тестування Classrooms', () => {
     });
   });
 });
-
-test.describe('Тестування Settings - Lesson Slots', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('https://dash.edu-planner.com/auth/login');
-    await page.fill('[formcontrolname="email"]', process.env.YOUR_EMAIL || '');
-    await page.fill('[formcontrolname="password"]', process.env.YOUR_PASSWORD || '');
-    await page.click('button[type="submit"]');
-    await expect(page.locator('nav.sidebar')).toBeVisible();
-  });
-  test('Створення, пошук і видалення Lesson Slots', async ({ page }) => {
-    await test.step('Створення Lesson Slots', async () => {
-    
-    await page.locator('app-general-page div').filter({ hasText: /^Lesson Slots$/ }).getByRole('button').click();
-    await page.locator('app-input-text').filter({ hasText: 'Name' }).locator('div').first().click();
-    await page.getByRole('textbox', { name: 'Enter Name' }).fill('testName');
-    await page.getByText('Start hour Select items').click();
-    await page.locator('label').filter({ hasText: '10' }).click();
-    await page.locator('#headlessui-menu-button-21').click();
-    await page.locator('label').filter({ hasText: /^0$/ }).click();
-    await page.locator('#headlessui-menu-button-22').click();
-    await page.locator('label').filter({ hasText: '11' }).click();
-    await page.getByRole('button', { name: 'Select items' }).click();
-    await page.locator('label').filter({ hasText: '20' }).click();
-    await page.locator('app-input-text').filter({ hasText: 'Academic hours' }).locator('div').first().click();
-    await page.getByPlaceholder('Enter Academic hours').fill('52');
-    await page.getByRole('button', { name: 'Create' }).click();
-    await page.goto('https://dash.edu-planner.com/lesson-slots');await page.getByRole('link', { name: 'Lesson Slots' }).click();
-
-
-
-
-
-});
