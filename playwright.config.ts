@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import 'dotenv/config';
 
 /**
  * Read environment variables from file.
@@ -37,7 +38,6 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     actionTimeout: 10000, // таймаут для кожної дії
     navigationTimeout: 30000, // таймаут для переходу між сторінками
-    baseURL: 'https://demoqa.com', // якщо використовуєш коротке `page.goto('/')`
   },
 
   /* Configure projects for major browsers */
