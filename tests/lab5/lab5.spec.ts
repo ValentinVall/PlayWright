@@ -1,45 +1,55 @@
 import { test, expect } from '@playwright/test';
 
+// Дані для кожного запису
+const records = [
+  {
+    firstName: 'Faculty',
+    lastName: 'Test',
+    email: 'faculty@example.com',
+    age: '45',
+    salary: '10000',
+    department: 'Faculty of Physics',
+  },
+  {
+    firstName: 'Group',
+    lastName: 'Test',
+    email: 'group@example.com',
+    age: '30',
+    salary: '5000',
+    department: 'Phys-101',
+  },
+  {
+    firstName: 'Teacher',
+    lastName: 'Test',
+    email: 'teacher@example.com',
+    age: '40',
+    salary: '8000',
+    department: 'Phys-101',
+  },
+];
+
 test('Create faculty → group → teacher chain', async ({ page }) => {
   await page.goto('https://demoqa.com/webtables');
 
-  // === 1. Додаємо "Факультет"
-  await page.click('#addNewRecordButton');
-  await page.fill('#firstName', 'Faculty');
-  await page.fill('#lastName', 'Test');
-  await page.fill('#userEmail', 'faculty@example.com');
-  await page.fill('#age', '45');
-  await page.fill('#salary', '10000');
-  await page.fill('#department', 'Faculty of Physics');
-  await page.click('#submit');
+  // Додаємо записи один за одним
+  for (const record of records) {
+    await page.click('#addNewRecordButton');
+    await page.fill('#firstName', record.firstName);
+    await page.fill('#lastName', record.lastName);
+    await page.fill('#userEmail', record.email);
+    await page.fill('#age', record.age);
+    await page.fill('#salary', record.salary);
+    await page.fill('#department', record.department);
+    await page.click('#submit');
+  }
 
-  // === 2. Додаємо "Групу"
-  await page.click('#addNewRecordButton');
-  await page.fill('#firstName', 'Group');
-  await page.fill('#lastName', 'Test');
-  await page.fill('#userEmail', 'group@example.com');
-  await page.fill('#age', '30');
-  await page.fill('#salary', '5000');
-  await page.fill('#department', 'Phys-101');
-  await page.click('#submit');
-
-  // === 3. Додаємо "Викладача"
-  await page.click('#addNewRecordButton');
-  await page.fill('#firstName', 'Teacher');
-  await page.fill('#lastName', 'Test');
-  await page.fill('#userEmail', 'teacher@example.com');
-  await page.fill('#age', '40');
-  await page.fill('#salary', '8000');
-  await page.fill('#department', 'Phys-101');
-  await page.click('#submit');
-
-  // === 4. Перевірка через пошук
+  // Пошук викладача
   await page.fill('#searchBox', 'Teacher');
 
-  const filteredRows = page.locator('.rt-tr-group', { hasText: 'Teacher' });
-  await expect(filteredRows).toHaveCount(1);
+  const teacherRow = page.locator('.rt-tr-group', { hasText: 'Teacher' });
+  await expect(teacherRow).toHaveCount(1);
 
-  const row = filteredRows.first();
+  const row = teacherRow.first();
   await expect(row).toContainText('Teacher');
   await expect(row).toContainText('teacher@example.com');
   await expect(row).toContainText('Phys-101');
